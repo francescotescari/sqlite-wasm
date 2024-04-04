@@ -14,26 +14,53 @@ const error = (...args) => logHtml('error', ...args);
 
 const start = function (sqlite3) {
   log('Running SQLite3 version', sqlite3.version.libVersion);
-  const db = new sqlite3.oo1.DB('/mydb.sqlite3', 'ct');
+  const db = new sqlite3.oo1.DB('/mydb.sqlite3', 'c');
   log('Created transient database', db.filename);
 
   try {
     log('Creating a table...');
-    db.exec('CREATE TABLE IF NOT EXISTS t(a,b)');
+    db.exec(`CREATE TABLE IF NOT EXISTS t(
+       aaaaaaaaaaaaaaaaaaaaaa0,
+       aaaaaaaaaaaaaaaaaaaaaa1,
+       aaaaaaaaaaaaaaaaaaaaaa2,
+       aaaaaaaaaaaaaaaaaaaaaa3,
+       aaaaaaaaaaaaaaaaaaaaaa4,
+       aaaaaaaaaaaaaaaaaaaaaa5,
+       aaaaaaaaaaaaaaaaaaaaaa6,
+       aaaaaaaaaaaaaaaaaaaaaa7,
+       aaaaaaaaaaaaaaaaaaaaaa8,
+       aaaaaaaaaaaaaaaaaaaaaa9,
+       aaaaaaaaaaaaaaaaaaaaaa10,
+       aaaaaaaaaaaaaaaaaaaaaa11,
+       aaaaaaaaaaaaaaaaaaaaaa12,
+       aaaaaaaaaaaaaaaaaaaaaa13,
+       aaaaaaaaaaaaaaaaaaaaaa14,
+       aaaaaaaaaaaaaaaaaaaaaa15,
+       aaaaaaaaaaaaaaaaaaaaaa16,
+       aaaaaaaaaaaaaaaaaaaaaa17,
+       aaaaaaaaaaaaaaaaaaaaaa18,
+       aaaaaaaaaaaaaaaaaaaaaa19,
+       aaaaaaaaaaaaaaaaaaaaaa20
+             );`);
     log('Insert some data using exec()...');
-    for (let i = 20; i <= 25; ++i) {
+    for (let i = 0; i < 10000; ++i) {
       db.exec({
-        sql: 'INSERT INTO t(a,b) VALUES (?,?)',
-        bind: [i, i * 2],
+        sql: 'INSERT INTO t VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);',
+        bind: [i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i],
       });
     }
     log('Query data with exec()...');
-    db.exec({
-      sql: 'SELECT a FROM t ORDER BY a LIMIT 3',
-      callback: (row) => {
-        log(row);
-      },
+    const time = Date.now();
+    // replace with 'object' to see difference in performance
+    const rowMode = 'array';
+    const result = db.exec({
+      sql: 'SELECT * FROM t;',
+      rowMode,
+      returnValue: 'resultRows',
     });
+    const timeTaken = Date.now() - time;
+    console.log(result);
+    console.log(`Time taken for rowMode ${rowMode}: ${timeTaken}ms`);
   } finally {
     db.close();
   }
